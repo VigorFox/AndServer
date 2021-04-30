@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Yan Zhenjie.
+ * Copyright © 2016 Zhenjie Yan.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@ package com.yanzhenjie.andserver.sample;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.yanzhenjie.loading.dialog.LoadingDialog;
 
@@ -31,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Yan Zhenjie on 2016/6/13.
+ * Created by Zhenjie Yan on 2018/6/9.
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,13 +50,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mBtnStart = (Button) findViewById(R.id.btn_start);
-        mBtnStop = (Button) findViewById(R.id.btn_stop);
-        mBtnBrowser = (Button) findViewById(R.id.btn_browse);
-        mTvMessage = (TextView) findViewById(R.id.tv_message);
+        mBtnStart = findViewById(R.id.btn_start);
+        mBtnStop = findViewById(R.id.btn_stop);
+        mBtnBrowser = findViewById(R.id.btn_browse);
+        mTvMessage = findViewById(R.id.tv_message);
 
         mBtnStart.setOnClickListener(this);
         mBtnStop.setOnClickListener(this);
@@ -81,12 +82,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
             case R.id.btn_start: {
                 showDialog();
-                mServerManager.startService();
+                mServerManager.startServer();
                 break;
             }
             case R.id.btn_stop: {
                 showDialog();
-                mServerManager.stopService();
+                mServerManager.stopServer();
                 break;
             }
             case R.id.btn_browse: {
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Start notify.
      */
-    public void serverStart(String ip) {
+    public void onServerStart(String ip) {
         closeDialog();
         mBtnStart.setVisibility(View.GONE);
         mBtnStop.setVisibility(View.VISIBLE);
@@ -115,9 +116,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mRootUrl = "http://" + ip + ":8080/";
             addressList.add(mRootUrl);
             addressList.add("http://" + ip + ":8080/login.html");
-            addressList.add("http://" + ip + ":8080/image");
-            addressList.add("http://" + ip + ":8080/download");
-            addressList.add("http://" + ip + ":8080/upload");
             mTvMessage.setText(TextUtils.join("\n", addressList));
         } else {
             mRootUrl = null;
@@ -128,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Error notify.
      */
-    public void serverError(String message) {
+    public void onServerError(String message) {
         closeDialog();
         mRootUrl = null;
         mBtnStart.setVisibility(View.VISIBLE);
@@ -140,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Stop notify.
      */
-    public void serverStop() {
+    public void onServerStop() {
         closeDialog();
         mRootUrl = null;
         mBtnStart.setVisibility(View.VISIBLE);
@@ -150,15 +148,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showDialog() {
-        if (mDialog == null)
+        if (mDialog == null) {
             mDialog = new LoadingDialog(this);
-        if (!mDialog.isShowing())
+        }
+        if (!mDialog.isShowing()) {
             mDialog.show();
+        }
     }
 
     private void closeDialog() {
-        if (mDialog != null && mDialog.isShowing())
+        if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
+        }
     }
-
 }
